@@ -1,10 +1,15 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface Product {
   id: number;
@@ -84,6 +89,105 @@ const products: Product[] = [
     description: 'Молочный шоколад с хрустящими кукурузными хлопьями',
     weight: '100 г',
     ingredients: 'Сахар, какао-масло, сухое молоко, кукурузные хлопья, ваниль'
+  },
+  {
+    id: 7,
+    name: 'Pepsi Cola Classic',
+    country: 'США',
+    category: 'Напитки',
+    price: 180,
+    image: 'https://cdn.poehali.dev/projects/635d7c78-5637-4eee-911f-f1a763f2c8d6/files/42add35c-844c-45fc-aa82-ef36c9e136bd.jpg',
+    description: 'Легендарный газированный напиток с оригинальным вкусом колы от PepsiCo',
+    weight: '330 мл',
+    ingredients: 'Вода, сахар, двуокись углерода, краситель, натуральные ароматизаторы, кофеин'
+  },
+  {
+    id: 8,
+    name: 'Lays Classic',
+    country: 'США',
+    category: 'Чипсы',
+    price: 150,
+    image: 'https://cdn.poehali.dev/projects/635d7c78-5637-4eee-911f-f1a763f2c8d6/files/42add35c-844c-45fc-aa82-ef36c9e136bd.jpg',
+    description: 'Классические картофельные чипсы с солью — легендарный вкус от Lays',
+    weight: '150 г',
+    ingredients: 'Картофель, растительное масло, соль'
+  },
+  {
+    id: 9,
+    name: 'Doritos Nacho Cheese',
+    country: 'США',
+    category: 'Чипсы',
+    price: 190,
+    image: 'https://cdn.poehali.dev/projects/635d7c78-5637-4eee-911f-f1a763f2c8d6/files/42add35c-844c-45fc-aa82-ef36c9e136bd.jpg',
+    description: 'Кукурузные чипсы с насыщенным вкусом сыра начо',
+    weight: '150 г',
+    ingredients: 'Кукуруза, растительное масло, сырная приправа, соль, специи'
+  },
+  {
+    id: 10,
+    name: 'Mountain Dew',
+    country: 'США',
+    category: 'Напитки',
+    price: 190,
+    image: 'https://cdn.poehali.dev/projects/635d7c78-5637-4eee-911f-f1a763f2c8d6/files/42add35c-844c-45fc-aa82-ef36c9e136bd.jpg',
+    description: 'Энергетический газированный напиток с цитрусовым вкусом',
+    weight: '330 мл',
+    ingredients: 'Вода, сахар, лимонный сок, кофеин, натуральные ароматизаторы, консерванты'
+  },
+  {
+    id: 11,
+    name: 'Cheetos Crunchy',
+    country: 'США',
+    category: 'Чипсы',
+    price: 170,
+    image: 'https://cdn.poehali.dev/projects/635d7c78-5637-4eee-911f-f1a763f2c8d6/files/42add35c-844c-45fc-aa82-ef36c9e136bd.jpg',
+    description: 'Хрустящие кукурузные снеки с сырным вкусом',
+    weight: '130 г',
+    ingredients: 'Кукуруза, растительное масло, сырный порошок, соль'
+  },
+  {
+    id: 12,
+    name: 'Pepsi Max',
+    country: 'США',
+    category: 'Напитки',
+    price: 180,
+    image: 'https://cdn.poehali.dev/projects/635d7c78-5637-4eee-911f-f1a763f2c8d6/files/42add35c-844c-45fc-aa82-ef36c9e136bd.jpg',
+    description: 'Pepsi без сахара с максимальным вкусом',
+    weight: '330 мл',
+    ingredients: 'Вода, подсластители (аспартам, ацесульфам К), двуокись углерода, натуральные ароматизаторы, кофеин'
+  },
+  {
+    id: 13,
+    name: 'Lays Sour Cream & Onion',
+    country: 'США',
+    category: 'Чипсы',
+    price: 160,
+    image: 'https://cdn.poehali.dev/projects/635d7c78-5637-4eee-911f-f1a763f2c8d6/files/42add35c-844c-45fc-aa82-ef36c9e136bd.jpg',
+    description: 'Чипсы Lays со вкусом сметаны и лука',
+    weight: '150 г',
+    ingredients: 'Картофель, растительное масло, сметанно-луковая приправа, соль'
+  },
+  {
+    id: 14,
+    name: 'Mirinda Orange',
+    country: 'США',
+    category: 'Напитки',
+    price: 170,
+    image: 'https://cdn.poehali.dev/projects/635d7c78-5637-4eee-911f-f1a763f2c8d6/files/42add35c-844c-45fc-aa82-ef36c9e136bd.jpg',
+    description: 'Апельсиновый газированный напиток от PepsiCo',
+    weight: '330 мл',
+    ingredients: 'Вода, сахар, апельсиновый сок, двуокись углерода, натуральные ароматизаторы'
+  },
+  {
+    id: 15,
+    name: 'Doritos Cool Ranch',
+    country: 'США',
+    category: 'Чипсы',
+    price: 190,
+    image: 'https://cdn.poehali.dev/projects/635d7c78-5637-4eee-911f-f1a763f2c8d6/files/42add35c-844c-45fc-aa82-ef36c9e136bd.jpg',
+    description: 'Кукурузные чипсы со вкусом прохладного ранча',
+    weight: '150 г',
+    ingredients: 'Кукуруза, растительное масло, приправа ранч, молочный порошок, специи'
   }
 ];
 
@@ -94,19 +198,35 @@ const countries = [
   { name: 'Германия', flag: '🇩🇪', color: 'bg-yellow-50 border-yellow-200' }
 ];
 
-const categories = ['Все', 'Шоколад', 'Мармелад', 'Печенье'];
+const categories = ['Все', 'Шоколад', 'Мармелад', 'Печенье', 'Чипсы', 'Напитки'];
 
 export default function Index() {
   const [selectedCountry, setSelectedCountry] = useState('Все страны');
   const [selectedCategory, setSelectedCategory] = useState('Все');
   const [cart, setCart] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-
-  const filteredProducts = products.filter(product => {
-    const countryMatch = selectedCountry === 'Все страны' || product.country === selectedCountry;
-    const categoryMatch = selectedCategory === 'Все' || product.category === selectedCategory;
-    return countryMatch && categoryMatch;
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [checkoutForm, setCheckoutForm] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    address: '',
+    city: '',
+    delivery: 'courier',
+    comment: ''
   });
+
+  const filteredProducts = useMemo(() => {
+    return products.filter(product => {
+      const countryMatch = selectedCountry === 'Все страны' || product.country === selectedCountry;
+      const categoryMatch = selectedCategory === 'Все' || product.category === selectedCategory;
+      const searchMatch = searchQuery === '' || 
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchQuery.toLowerCase());
+      return countryMatch && categoryMatch && searchMatch;
+    });
+  }, [selectedCountry, selectedCategory, searchQuery]);
 
   const addToCart = (product: Product) => {
     setCart([...cart, product]);
@@ -130,10 +250,17 @@ export default function Index() {
             </div>
           </div>
           
-          <div className="flex items-center gap-6">
-            <Button variant="ghost" size="sm">
-              <Icon name="Search" size={20} />
-            </Button>
+          <div className="flex items-center gap-4">
+            <div className="relative w-64 hidden md:block">
+              <Icon name="Search" size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Поиск товаров..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
             <Button variant="ghost" size="sm" className="relative">
               <Icon name="ShoppingCart" size={20} />
               {cart.length > 0 && (
@@ -286,7 +413,7 @@ export default function Index() {
                 <span>Итого:</span>
                 <span className="text-primary">{totalPrice} ₽</span>
               </div>
-              <Button className="w-full" size="lg">
+              <Button className="w-full" size="lg" onClick={() => setShowCheckout(true)}>
                 Оформить заказ
                 <Icon name="ArrowRight" size={18} className="ml-2" />
               </Button>
@@ -341,6 +468,131 @@ export default function Index() {
         </DialogContent>
       </Dialog>
 
+      <Dialog open={showCheckout} onOpenChange={setShowCheckout}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">Оформление заказа</DialogTitle>
+            <DialogDescription>
+              Заполните данные для доставки. Мы свяжемся с вами в ближайшее время
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-6">
+            <div className="bg-secondary/30 p-4 rounded-lg">
+              <h4 className="font-semibold mb-3">Ваш заказ ({cart.length} товаров)</h4>
+              <div className="space-y-2 max-h-40 overflow-y-auto">
+                {cart.map((item, index) => (
+                  <div key={index} className="flex justify-between text-sm">
+                    <span>{item.name}</span>
+                    <span className="font-semibold">{item.price} ₽</span>
+                  </div>
+                ))}
+              </div>
+              <div className="border-t mt-3 pt-3 flex justify-between font-bold text-lg">
+                <span>Итого:</span>
+                <span className="text-primary">{totalPrice} ₽</span>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">ФИО *</Label>
+                <Input
+                  id="name"
+                  placeholder="Иван Иванов"
+                  value={checkoutForm.name}
+                  onChange={(e) => setCheckoutForm({...checkoutForm, name: e.target.value})}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">Телефон *</Label>
+                <Input
+                  id="phone"
+                  placeholder="+7 (999) 123-45-67"
+                  value={checkoutForm.phone}
+                  onChange={(e) => setCheckoutForm({...checkoutForm, phone: e.target.value})}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Email *</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="example@mail.com"
+                value={checkoutForm.email}
+                onChange={(e) => setCheckoutForm({...checkoutForm, email: e.target.value})}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="city">Город *</Label>
+              <Input
+                id="city"
+                placeholder="Москва"
+                value={checkoutForm.city}
+                onChange={(e) => setCheckoutForm({...checkoutForm, city: e.target.value})}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="address">Адрес доставки *</Label>
+              <Textarea
+                id="address"
+                placeholder="Улица, дом, квартира"
+                value={checkoutForm.address}
+                onChange={(e) => setCheckoutForm({...checkoutForm, address: e.target.value})}
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="delivery">Способ доставки</Label>
+              <Select value={checkoutForm.delivery} onValueChange={(value) => setCheckoutForm({...checkoutForm, delivery: value})}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="courier">Курьером (300 ₽)</SelectItem>
+                  <SelectItem value="pickup">Самовывоз (Бесплатно)</SelectItem>
+                  <SelectItem value="post">Почта России (от 200 ₽)</SelectItem>
+                  <SelectItem value="cdek">СДЭК (от 250 ₽)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="comment">Комментарий к заказу</Label>
+              <Textarea
+                id="comment"
+                placeholder="Пожелания по доставке, подарочная упаковка и т.д."
+                value={checkoutForm.comment}
+                onChange={(e) => setCheckoutForm({...checkoutForm, comment: e.target.value})}
+                rows={2}
+              />
+            </div>
+          </div>
+
+          <DialogFooter className="flex gap-3 mt-6">
+            <Button variant="outline" onClick={() => setShowCheckout(false)}>
+              Отмена
+            </Button>
+            <Button 
+              size="lg" 
+              onClick={() => {
+                alert('Спасибо за заказ! Мы свяжемся с вами в ближайшее время');
+                setShowCheckout(false);
+                setCart([]);
+              }}
+            >
+              Подтвердить заказ
+              <Icon name="Check" size={18} className="ml-2" />
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <footer className="bg-foreground/5 mt-20">
         <div className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-4 gap-8">
@@ -365,7 +617,7 @@ export default function Index() {
             <div>
               <h4 className="font-semibold mb-4">Информация</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>О нас</li>
+                <li><Link to="/about" className="hover:text-primary transition-colors">О нас</Link></li>
                 <li>Доставка</li>
                 <li>Оплата</li>
                 <li>Блог</li>
